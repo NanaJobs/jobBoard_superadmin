@@ -70,7 +70,7 @@ function isActive(pathname: string, to: string) {
   return pathname === to || pathname.startsWith(`${to}/`);
 }
 
-function SidebarContent({ pathname }: { pathname: string }) {
+function SidebarContent({ pathname, onLogout }: { pathname: string; onLogout: () => void }) {
   return (
     <div className="flex h-full flex-col bg-sidebar text-sidebar-foreground">
       <div className="flex items-center gap-2 px-6 py-6">
@@ -117,7 +117,10 @@ function SidebarContent({ pathname }: { pathname: string }) {
       </nav>
 
       <div className="border-t border-sidebar-border p-3">
-        <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+        <button
+          onClick={onLogout}
+          className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+        >
           <LogOut className="h-4 w-4" />
           Logout
         </button>
@@ -170,7 +173,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     <div className="flex min-h-screen bg-background">
       <aside className="hidden w-64 shrink-0 lg:block">
         <div className="fixed h-screen w-64">
-          <SidebarContent pathname={pathname} />
+          <SidebarContent pathname={pathname} onLogout={handleLogout} />
         </div>
       </aside>
 
@@ -181,7 +184,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
             onClick={() => setMobileOpen(false)}
           />
           <div className="absolute inset-y-0 left-0 w-64">
-            <SidebarContent pathname={pathname} />
+            <SidebarContent pathname={pathname} onLogout={handleLogout} />
             <button
               onClick={() => setMobileOpen(false)}
               className="absolute right-3 top-6 text-sidebar-foreground/70"
